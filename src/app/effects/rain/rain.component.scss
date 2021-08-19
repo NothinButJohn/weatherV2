@@ -1,0 +1,69 @@
+.rainCloud{
+  font-size: x-small;
+
+}
+
+.cloud{
+  width: 3em;
+  height: 3em;
+  color: purple;
+  background: currentColor;
+  position: relative;
+  left: 80%;
+  // top: 50%;
+  border-radius: 100%;
+  box-shadow: -1em 1em,
+    1em 1em
+}
+
+.cloud:after{
+  content: ' ';
+  display: block;
+  width: 2em;
+  height: 3em;
+  color: purple;
+  background: currentColor;
+  position: relative;
+  top: 0em;
+  left: .5em
+}
+
+.rain {
+  content: ' ';
+  display: block;
+  width: 0.8em;
+  height: 1em;
+  background: currentColor;
+  color: grey;
+  border-radius: 100% 0 100% 50%;
+  position: relative;
+  top: 150%;
+  box-shadow: 1.5em 0em,
+    0.5em 1em;
+/*   transform: rotate(-33deg); */
+  animation: rain 3s infinite;
+}
+
+@keyframes rain {
+  0% {
+      color: grey;
+      box-shadow: 1.5em 0em blue,
+    0.5em 1em #c5d9eb;
+  }
+    25% {
+      color: #c5d9eb;
+      box-shadow: 1.5em 0em grey,
+    0.5em 1em #6398c9;}
+    50% {
+      color: #6398c9;
+      box-shadow: 1.5em 0em #c5d9eb,
+    0.5em 1em #1a7dd9;}
+    75% {
+      color: #1a7dd9;
+      box-shadow: 1.5em 0em #6398c9,
+    0.5em 1em blue;}
+    100% {
+      color: blue;
+      box-shadow: 1.5em 0em #1a7dd9,
+    0.5em 1em grey;}
+}

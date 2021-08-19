@@ -1,0 +1,23 @@
+
+
+
+
+
+
+<!-- Location Search and Autocomplete -->
+<mat-autocomplete #auto="matAutocomplete" >
+  <mat-option *ngFor="let option of autocompleteLocationResult$ | async; let i = index"
+  [value]="option.description" (click)="onLocationSelect(option.placeId)">
+    {{option.description}}
+  </mat-option>
+</mat-autocomplete>
+
+<form mat-form-field>
+  <input matInput [formControl]="locationQueryFormControl" type="text" [matAutocomplete]="auto">
+</form>
+
+<div *ngIf="weatherData$ | async">
+  {{weatherData$.current.description}}
+</div>
+
+
