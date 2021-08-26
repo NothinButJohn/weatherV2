@@ -57,7 +57,7 @@ export class WeatherService {
    * @param lon - longitude
    */
   getDataOpenWeatherMapAPI(lat:number, lon: number){
-    return this.http.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&appid=${this.openWeatherAPIkey}`).pipe(
+    return this.http.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&appid=${this.openWeatherAPIkey}&units=imperial`).pipe(
       map((response: any) => {
         // let current = response.current
         // let description = response.weather[0].description

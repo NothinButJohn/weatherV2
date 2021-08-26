@@ -5,7 +5,15 @@ import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators'
 import { WeatherService } from '../weather.service';
 
-
+interface WeatherData {
+  current;
+  daily;
+  hourly;
+  lat;
+  lon;
+  timezone;
+  timezone_offset;
+}
 
 
 @Component({
@@ -17,7 +25,7 @@ export class WeatherMainComponent implements OnInit {
 
   locationQueryFormControl = new FormControl('');
   autocompleteLocationResult$: Observable<any>;
-  weatherData$: Observable<any>;
+  weatherData$: Observable<WeatherData>;
 
   constructor(private weatherService: WeatherService, private http: HttpClient) { }
 
@@ -31,22 +39,22 @@ export class WeatherMainComponent implements OnInit {
    * Use locationQueryFormControl on text input to acquire valueChanges
    */
   processLocationQuery(){
-    let queryFormValue$: Observable<any> = this.locationQueryFormControl.valueChanges
-    // this.autocompleteLocationResult$ =
+    const queryFormValue$: Observable<any> = this.locationQueryFormControl.valueChanges;
+    // this.autocompleteLocationResult$
     queryFormValue$.pipe(
       map((queryValue)  =>  {
-          let result = this.weatherService.getPlacePredictions(queryValue);
+          const result = this.weatherService.getPlacePredictions(queryValue);
           // console.log(result)
           result.then((val) => {
             return this.autocompleteLocationResult$ = new Observable(sub => {
               sub.next(val),
               sub.error(),
-              sub.complete()
-            })
-          })
+              sub.complete();
+            });
+          });
           return result;
       })
-    ).subscribe()
+    ).subscribe();
   }
 
   /**
@@ -56,15 +64,31 @@ export class WeatherMainComponent implements OnInit {
    * @param placeId - placeId of the selected location
    */
   onLocationSelect(placeId: string){
-    console.log("selected: ", placeId)
+    console.log("selected: ", placeId);
     // let selectedValue = this.locationQueryFormControl.val
-     let np = this.weatherService.getLatLonGeocoder(placeId).then((coordinates) => {
-      console.log(coordinates)
-      return this.weatherService.getDataOpenWeatherMapAPI(coordinates.lat, coordinates.lng).pipe(
+    this.weatherService.getLatLonGeocoder(placeId).then((coordinates) => {
+      console.log(coordinates);
+      this.weatherData$ = this.weatherService.getDataOpenWeatherMapAPI(coordinates.lat, coordinates.lng).pipe(
         map(x => {
-          console.log(x)
-        })).subscribe()
-    })
+          let hourlyData: any[] = [];
+          x.hourly.forEach(hourData => {
+            let hour = new Date(hourData.dt * 1000);
+            hourlyData.push(hour);
+          });
+          console.log(hourlyData)
+          const res: WeatherData = {
+            current: x.current,
+            daily: x.daily,
+            hourly: x.hourly,
+            lat: x.lat,
+            lon: x.lon,
+            timezone: x.timezone,
+            timezone_offset: x.timezone_offset,
+          };
+          console.log('[onLocationSelect()] response weather data object: ', res);
+          return res;
+        }));
+    });
 
   }
 

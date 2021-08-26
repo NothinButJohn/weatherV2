@@ -16,8 +16,15 @@
   <input matInput [formControl]="locationQueryFormControl" type="text" [matAutocomplete]="auto">
 </form>
 
-<div *ngIf="weatherData$ | async">
-  {{weatherData$.current.description}}
+<div *ngIf="weatherData$ | async as weatherData">
+  {{weatherData.current.weather[0].description}}
+  <div class="hourly__weather__data">
+    <div *ngFor="let hourData of weatherData.hourly">
+
+    </div>
+  </div>
+
+
 </div>
 
 
