@@ -13,6 +13,9 @@ interface WeatherData {
   lon;
   timezone;
   timezone_offset;
+  hours;
+  dailyFormatted;
+
 }
 
 
@@ -70,10 +73,25 @@ export class WeatherMainComponent implements OnInit {
       console.log(coordinates);
       this.weatherData$ = this.weatherService.getDataOpenWeatherMapAPI(coordinates.lat, coordinates.lng).pipe(
         map(x => {
-          let hourlyData: any[] = [];
+          const hourlyData: any[] = [];
+          const dailyData: any[] = [];
+          const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+          x.daily.forEach((day: any) => {
+            const date = new Date(day.dt * 1000).getDay();
+            const icon = this.weatherIcon(day.weather[0].description);
+            const dayFormatted: any = {
+              min: day.temp.min,
+              max: day.temp.max,
+              description: day.weather[0].main,
+              date: days[date],
+              icon
+            }
+            dailyData.push(dayFormatted)
+          });
           x.hourly.forEach(hourData => {
             let hour = new Date(hourData.dt * 1000);
-            hourlyData.push(hour);
+            hourlyData.push({hour: hour.getHours(), temp: hourData.temp});
           });
           console.log(hourlyData)
           const res: WeatherData = {
@@ -84,13 +102,39 @@ export class WeatherMainComponent implements OnInit {
             lon: x.lon,
             timezone: x.timezone,
             timezone_offset: x.timezone_offset,
+            hours: hourlyData,
+            dailyFormatted: dailyData
           };
-          console.log('[onLocationSelect()] response weather data object: ', res);
+          console.log('[onLocationSelect()] response weather data object: ', res, dailyData);
           return res;
         }));
     });
 
   }
 
+  // tslint:disable-next-line:typedef
+  weatherIcon(weather: string){
+    if(weather.includes('clear')){
+      return '/assets/weatherIcons/ios11-weather-sunny-icon.png'
+    }
+    else if(weather.includes('rain')){
+      return '/assets/weatherIcons/ios11-weather-rain-icon.png'
+    }
+    else if(weather.includes('thunderstorm')){
+      return '/assets/weatherIcons/ios11-weather-thunderstorm-icon.png'
+    }
+    else if(weather.includes('snow')){
+      return '/assets/weatherIcons/ios11-weather-snow-icon.png'
+    }
+    else if(weather.includes('mist')){
+      return '/assets/weatherIcons/ios11-weather-haze-icon.png'
+    }
+    else if(weather.includes('clouds')){
+      return '/assets/weatherIcons/ios11-weather-cloudy-icon.png'
+    }
+  }
+
 }
+
+
 

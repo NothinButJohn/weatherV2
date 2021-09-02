@@ -29,9 +29,10 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatInputModule,
     MatCardModule,
     MatButtonModule,
+    MatAutocompleteModule,
     MatFormFieldModule,
     FormsModule,
-    MatAutocompleteModule
+
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}

@@ -1,30 +1,119 @@
 
 
+<div class="weather__app">
+  <!-- Location Search and Autocomplete -->
+  <div class="weather__search__container">
 
+    <mat-form-field>
+      <input matInput [formControl]="locationQueryFormControl" type="text" [matAutocomplete]="auto">
+    </mat-form-field>
+    <mat-autocomplete #auto="matAutocomplete" >
+      <mat-option *ngFor="let option of autocompleteLocationResult$ | async; let i = index"
+                  [value]="option.description" (click)="onLocationSelect(option.placeId)">
+        {{option.description}}
+      </mat-option>
+    </mat-autocomplete>
 
-
-
-<!-- Location Search and Autocomplete -->
-<mat-autocomplete #auto="matAutocomplete" >
-  <mat-option *ngFor="let option of autocompleteLocationResult$ | async; let i = index"
-  [value]="option.description" (click)="onLocationSelect(option.placeId)">
-    {{option.description}}
-  </mat-option>
-</mat-autocomplete>
-
-<form mat-form-field>
-  <input matInput [formControl]="locationQueryFormControl" type="text" [matAutocomplete]="auto">
-</form>
-
-<div *ngIf="weatherData$ | async as weatherData">
-  {{weatherData.current.weather[0].description}}
-  <div class="hourly__weather__data">
-    <div *ngFor="let hourData of weatherData.hourly">
-
-    </div>
   </div>
 
+  <div *ngIf="weatherData$ | async as weatherData">
 
+    <div class="weather__current">
+      <span class="weather__description font">{{weatherData.current.weather[0].description}}</span>
+      <span class="weather__temp font">{{weatherData.current.temp}}</span>
+    </div>
+
+    <div *ngIf="weatherData.current.weather[0].description.includes('rain')">
+      <div class="drop-big-1"></div>
+      <div class="drop-big-2"></div>
+      <div class="drop-big-3"></div>
+      <div class="drop-big-4"></div>
+      <div class="drop-big-5"></div>
+      <div class="drop-big-6"></div>
+      <div class="drop-big-7"></div>
+      <div class="drop-big-8"></div>
+      <div class="drop-big-9"></div>
+      <div class="drop-big-10"></div>
+      <div class="drop-medium-1"></div>
+      <div class="drop-medium-2"></div>
+      <div class="drop-medium-3"></div>
+      <div class="drop-medium-4"></div>
+      <div class="drop-medium-5"></div>
+      <div class="drop-medium-6"></div>
+      <div class="drop-medium-7"></div>
+      <div class="drop-medium-8"></div>
+      <div class="drop-medium-9"></div>
+      <div class="drop-medium-10"></div>
+      <div class="drop-small-1"></div>
+      <div class="drop-small-2"></div>
+      <div class="drop-small-3"></div>
+      <div class="drop-small-4"></div>
+      <div class="drop-small-5"></div>
+      <div class="drop-small-6"></div>
+      <div class="drop-small-7"></div>
+      <div class="drop-small-8"></div>
+      <div class="drop-small-9"></div>
+      <div class="drop-small-10"></div>
+    </div>
+
+    <div *ngIf="weatherData.current.weather[0].description.includes('clear')">
+      <div class="frame">
+        <div class="sun"></div>
+        <div class="star">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="sunny">
+          <div *ngIf="weatherData.current.weather[0].description.includes('cloud')">
+            <svg width="151px" height="72px" viewBox="0 0 151 72" class="cloud-big" fill="#fff">
+              <path d="M12,71.8582223 C5.21541172,70.887763 0,65.0529438 0,58 C0,50.2680135 6.2680135,44 14,44 C15.3034487,44 16.565293,44.1781294 17.7625178,44.511373 C20.1480326,36.1342487 27.857651,30 37,30 C39.1595118,30 41.2390844,30.3422606 43.187432,30.9754962 C46.9847055,22.7265377 55.3236005,17 65,17 C65.5109562,17 66.0181831,17.0159673 66.5212088,17.0474302 C72.3931883,6.85865633 83.3956316,0 96,0 C110.201562,0 122.369492,8.70701098 127.456714,21.0739554 C140.625729,22.0732453 151,33.0751022 151,46.5 C151,60.4162144 139.852491,71.7287886 126,71.9951959 L126,72 L12,72 L12,71.8582223 Z"></path>
+            </svg>
+            <svg width="114px" height="57px" viewBox="0 0 114 57" class="cloud-medium" fill="#fff">
+              <path d="M102.292651,56.3294118 C102.699178,56.3786089 103.112967,56.4039216 103.532606,56.4039216 C109.232649,56.4039216 113.853448,51.733637 113.853448,45.972549 C113.853448,41.7273454 111.344422,38.074432 107.743391,36.4460037 C107.045737,28.2547189 100.884497,21.6416815 92.9606326,20.347489 C90.4669137,12.8093882 83.4252407,7.37647059 75.1280873,7.37647059 C73.2303779,7.37647059 71.3983451,7.66067728 69.6713825,8.18927533 C65.0904074,3.15484259 58.5186473,0 51.2178418,0 C40.5642132,0 31.4630003,6.71786477 27.8347818,16.1910283 C27.2799765,16.1270113 26.7158185,16.0941176 26.1440592,16.0941176 C18.0011402,16.0941176 11.4,22.7659527 11.4,30.9960784 C11.4,31.8603273 11.472792,32.7073925 11.6125174,33.5313529 C11.5418336,33.5300607 11.4709926,33.5294118 11.4,33.5294118 C5.10395385,33.5294118 0,38.6333656 0,44.9294118 C0,51.2254579 5.10395385,56.3294118 11.4,56.3294118 L102.292651,56.3294118 Z"></path>
+            </svg>
+          </div>
+
+
+        </div>
+        <div class="twinkling">
+          <div class="dot"></div>
+          <div class="dot dot-2"></div>
+          <div class="dot dot-3"></div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+    <div class="hourly__weather__data__container scroll">
+<!--      <hr>-->
+      <div *ngFor="let hourData of weatherData.hours" class="hourly__weather__data">
+        <div *ngIf="hourData.hour < 12; else afternoon">
+          <span class="hourly-hour font">{{hourData.hour}}am</span>
+        </div>
+        <ng-template #afternoon>
+          <span class="hourly-hour font">{{hourData.hour}}pm</span>
+        </ng-template>
+
+        <span class="hourly-temp font">{{hourData.temp}}</span>
+      </div>
+    </div>
+    <hr>
+
+    <div>
+      <div *ngFor="let day of weatherData.dailyFormatted" class="daily__weather__day__container">
+        <span class="daily__weather__day font">{{day.date}}</span>
+        <img src="{{day.icon}}" class="daily__weather__icon">
+        <span class="daily__weather__min font">{{day.min}}</span>
+        <span class="daily__weather__max font">{{day.max}}</span>
+      </div>
+    </div>
+
+  </div>
 </div>
+
+
+
+
 
 
