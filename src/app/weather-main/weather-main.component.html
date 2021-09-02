@@ -1,4 +1,4 @@
-
+<div class="weather__app__image"></div>
 
 <div class="weather__app">
   <!-- Location Search and Autocomplete -->
@@ -23,7 +23,7 @@
       <span class="weather__temp font">{{weatherData.current.temp}}</span>
     </div>
 
-    <div *ngIf="weatherData.current.weather[0].description.includes('rain')">
+    <div *ngIf="weatherData.current.weather[0].description.includes('rain')" class="rain__animation">
       <div class="drop-big-1"></div>
       <div class="drop-big-2"></div>
       <div class="drop-big-3"></div>
@@ -100,7 +100,7 @@
     </div>
     <hr>
 
-    <div>
+    <div class="daily__weather__container">
       <div *ngFor="let day of weatherData.dailyFormatted" class="daily__weather__day__container">
         <span class="daily__weather__day font">{{day.date}}</span>
         <img src="{{day.icon}}" class="daily__weather__icon">

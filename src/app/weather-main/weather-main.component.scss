@@ -2,6 +2,23 @@
   color: white;
 
 }
+.weather__app__image{
+  z-index: -2;
+  height: 100%;
+  background-image: url('/assets/wavy.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(10px);
+  //display: flex;
+}
+.weather__app{
+  z-index: 1;
+  top: 0%;
+  //left: 25%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
 
 .weather__search__container{
   display: flex;
@@ -20,6 +37,7 @@
   }
   .weather__temp{
     color: white;
+    //margin-top: 100px;
   }
 }
 
@@ -33,9 +51,11 @@
   overflow-y: auto;
   max-width: 400px;
   margin-top: 150px;
+  background-color: rgb(100, 130, 200, 0.3);
   //background: #fff;
   .hourly__weather__data {
     //background: #fff;
+    color: white;
     width: 100%;
     height: 50px;
     display: flex;
@@ -44,6 +64,15 @@
     align-items: center;
   }
 
+}
+
+.rain__animation{
+  top: 61%;
+  position: absolute;
+}
+
+.daily__weather__container{
+  background-color: rgb(100, 130, 200, 0.3);
 }
 
 .daily__weather__day__container{
@@ -72,7 +101,7 @@
 }
 
 
-//
+// credits: https://codepen.io/_Sabine/pen/QzzBve // https://codepen.io/_Sabine/pen/wYbmJx
 
 @import 'https://fonts.googleapis.com/css?family=Lato:300';
 @import 'https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css';
@@ -1107,6 +1136,7 @@ nav
 
 // use only the available space inside the 400x400 frame
 .frame {
+  opacity: 75%;
   z-index: -1;
   position: absolute;
   top: 30%;
