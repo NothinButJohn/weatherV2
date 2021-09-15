@@ -13,12 +13,14 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule, MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import { RainComponent } from './effects/rain/rain.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { WeatherV3Component } from './weather-v3/weather-v3.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WeatherMainComponent,
     RainComponent,
+    WeatherV3Component,
   ],
   imports: [
     BrowserModule,
