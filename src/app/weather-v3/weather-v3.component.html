@@ -1,65 +1,77 @@
 
+<div class="iPhoneContainer">
+  <div class="weather-app">
+    <div class="background-pseudo">
+      <div class="weather__search__container">
 
-<div class="weather-app">
-  <div class="background-pseudo">
-    <div class="weather__search__container">
+        <mat-form-field>
+          <input matInput [formControl]="locationQueryFormControl" type="text" [matAutocomplete]="auto">
+        </mat-form-field>
+        <mat-autocomplete #auto="matAutocomplete" class="mat-autocomplete-panel-alter" >
+          <div class="mat-autocomplete-panel-alter">
+            <mat-option *ngFor="let option of autocompleteLocationResult$ | async; let i = index"
+                        [value]="option.description" (click)="onLocationSelect(option.placeId)">
+              {{option.description}}
+            </mat-option>
+          </div>
+        </mat-autocomplete>
 
-      <mat-form-field>
-        <input matInput [formControl]="locationQueryFormControl" type="text" [matAutocomplete]="auto">
-      </mat-form-field>
-      <mat-autocomplete #auto="matAutocomplete" class="mat-autocomplete-panel-alter" >
-        <div class="mat-autocomplete-panel-alter">
-          <mat-option *ngFor="let option of autocompleteLocationResult$ | async; let i = index"
-                      [value]="option.description" (click)="onLocationSelect(option.placeId)">
-            {{option.description}}
-          </mat-option>
-        </div>
-      </mat-autocomplete>
-
-    </div>
-
-    <div *ngIf="weatherData$ | async as weatherData">
-
-      <div class="weather__current">
-        <span class="weather__description font">{{weatherData.current.weather[0].description}}</span>
-        <span class="weather__temp font">{{weatherData.current.temp}}&#176;</span>
-        <span class="weather__temp__max font">H:{{weatherData.current.temp}}&#176;</span>
-        <span class="weather__temp__min font">L:{{weatherData.current.temp}}&#176;</span>
       </div>
 
+      <div *ngIf="weatherData$ | async as weatherData">
+        <div *ngIf="selectedLocation$ | async as location">
+          <span class="selected__location font">{{location}}</span>
+        </div>
+        <div class="weather__current">
+          <span class="weather__description font">{{weatherData.current.weather[0].description}}</span>
+          <span class="weather__temp font">{{weatherData.current.temp}}&#176;</span>
+          <span class="weather__temp__max font">H:{{weatherData.current.temp}}&#176;</span>
+          <span class="weather__temp__min font">L:{{weatherData.current.temp}}&#176;</span>
+        </div>
 
-      <div class="bottomDataContainer">
-        <div class="hourly__weather__data__container scroll">
-          <div *ngFor="let hourData of weatherData.hours" class="hourly__weather__data">
-            <div *ngIf="hourData.hour < 12; else afternoon">
-              <span class="hourly-hour font">{{hourData.hour}}am</span>
+
+        <div class="bottomDataContainer">
+          <hr class="divider">
+          <div class="hourly__weather__data__container scroll">
+            <div *ngFor="let hourData of weatherData.hours" class="hourly__weather__data">
+              <div *ngIf="hourData.hour < 12; else afternoon">
+                <div *ngIf="hourData.hour == 0; else morning"><span class="hourly-hour font">12am</span></div>
+                <ng-template #morning><span class="hourly-hour font">{{hourData.hour}}am</span></ng-template>
+              </div>
+              <ng-template #afternoon>
+                <div *ngIf="hourData.hour !== 12; else noon"><span class="hourly-hour font">{{hourData.hour - 12}}pm</span></div>
+                <ng-template #noon><span class="hourly-hour font">12pm</span></ng-template>
+              </ng-template>
+              <span class="hourly-temp font">{{hourData.temp}}&#176;</span>
+              <div class="hourlyWeatherIcon__Container" *ngIf="(hourData.description.includes('clouds') || hourData.description.includes('clear')); else otherIcon">
+                <img class="hourlyWeatherIcon__cloudyClear" src="{{hourData.icon}}">
+              </div>
+              <ng-template #otherIcon>
+                <div class="hourlyWeatherIcon__Container">
+                  <img class="hourlyWeatherIcon" src="{{hourData.icon}}">
+                </div>
+              </ng-template>
             </div>
-            <ng-template #afternoon>
-              <span class="hourly-hour font">{{hourData.hour - 12}}pm</span>
-            </ng-template>
-            <span class="hourly-temp font">{{hourData.temp}}&#176;</span>
+          </div>
+          <hr class="divider">
+
+          <div class="daily__weather__container">
+            <div *ngFor="let day of weatherData.dailyFormatted; let i = index" class="daily__weather__day__container">
+              <span class="daily__weather__day font">{{day.date}}</span>
+              <img src="{{day.icon}}" class="daily__weather__icon">
+              <div>
+                <span class="daily__weather__min font">{{day.min}}&#176;</span>
+                <span class="daily__weather__max font">{{day.max}}&#176;</span>
+              </div>
+            </div>
           </div>
         </div>
-        <hr class="divider">
 
-        <div class="daily__weather__container">
-          <div *ngFor="let day of weatherData.dailyFormatted; let i = index" class="daily__weather__day__container">
-            <span class="daily__weather__day font">{{day.date}}</span>
-            <img src="{{day.icon}}" class="daily__weather__icon">
-            <div>
-              <span class="daily__weather__min font">{{day.min}}&#176;</span>
-              <span class="daily__weather__max font">{{day.max}}&#176;</span>
-            </div>
-          </div>
-        </div>
+
       </div>
-
-
     </div>
+
   </div>
-
-
-
-
 </div>
+
 

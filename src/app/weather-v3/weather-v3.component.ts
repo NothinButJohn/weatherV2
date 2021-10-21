@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit, Renderer2} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import { WeatherService } from '../weather.service';
 import {HttpClient} from '@angular/common/http';
@@ -28,6 +28,9 @@ export class WeatherV3Component implements OnInit {
   locationQueryFormControl = new FormControl('');
   autocompleteLocationResult$: Observable<any>;
   weatherData$: Observable<WeatherData>;
+  selectedLocation$: Observable<any> = new Observable<any>();
+  queryFormValue$: Observable<any> = this.locationQueryFormControl.valueChanges;
+  qfvSub: Subscription;
   constructor(private weatherService: WeatherService, private http: HttpClient, private renderer: Renderer2) { }
 
   ngOnInit(): void {
@@ -41,11 +44,10 @@ export class WeatherV3Component implements OnInit {
    */
   processLocationQuery(){
 
-    const queryFormValue$: Observable<any> = this.locationQueryFormControl.valueChanges;
     // this.autocompleteLocationResult$
-    queryFormValue$.pipe(
+    this.qfvSub = this.queryFormValue$.pipe(
       map((queryValue)  =>  {
-        const result = this.weatherService.getPlacePredictions(queryValue);
+        let result = this.weatherService.getPlacePredictions(queryValue);
         // console.log(result)
         result.then((val) => {
           return this.autocompleteLocationResult$ = new Observable(sub => {
@@ -75,6 +77,11 @@ export class WeatherV3Component implements OnInit {
     // let selectedValue = this.locationQueryFormControl.val
     this.weatherService.getLatLonGeocoder(placeId).then((coordinates) => {
       console.log(coordinates);
+      this.selectedLocation$ = of(coordinates.formattedAddress);
+      this.locationQueryFormControl.reset();
+      // this.qfvSub.unsubscribe();
+      // this.queryFormValue$ = this.locationQueryFormControl.valueChanges;
+      // this.processLocationQuery();
       this.weatherData$ = this.weatherService.getDataOpenWeatherMapAPI(coordinates.lat, coordinates.lng).pipe(
         map(x => {
           const hourlyData: any[] = [];
@@ -94,8 +101,9 @@ export class WeatherV3Component implements OnInit {
             dailyData.push(dayFormatted);
           });
           x.hourly.forEach(hourData => {
+            // console.log("hourly data", hourData);
             let hour = new Date(hourData.dt * 1000);
-            hourlyData.push({hour: hour.getHours(), temp: Math.floor(hourData.temp)});
+            hourlyData.push({hour: hour.getHours(), temp: Math.floor(hourData.temp), description: hourData.weather[0].description, icon: this.weatherIcon(hourData.weather[0].description)});
           });
           console.log(hourlyData)
           const res: WeatherData = {
