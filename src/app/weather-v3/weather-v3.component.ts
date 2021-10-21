@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit, Renderer2} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -28,7 +28,7 @@ export class WeatherV3Component implements OnInit {
   locationQueryFormControl = new FormControl('');
   autocompleteLocationResult$: Observable<any>;
   weatherData$: Observable<WeatherData>;
-  constructor(private weatherService: WeatherService, private http: HttpClient) { }
+  constructor(private weatherService: WeatherService, private http: HttpClient, private renderer: Renderer2) { }
 
   ngOnInit(): void {
     this.processLocationQuery();
@@ -40,6 +40,7 @@ export class WeatherV3Component implements OnInit {
    * Use locationQueryFormControl on text input to acquire valueChanges
    */
   processLocationQuery(){
+
     const queryFormValue$: Observable<any> = this.locationQueryFormControl.valueChanges;
     // this.autocompleteLocationResult$
     queryFormValue$.pipe(
@@ -55,7 +56,12 @@ export class WeatherV3Component implements OnInit {
         });
         return result;
       })
-    ).subscribe();
+    ).subscribe((x: any) => {
+      const autocomplete: any = document.getElementById('mat-autocomplete-0');
+      console.log('auto', autocomplete);
+      this.renderer.addClass(autocomplete, 'mat-autocomplete-panel-alter');
+    });
+
   }
 
   /**
